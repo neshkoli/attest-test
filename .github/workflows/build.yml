@@ -38,7 +38,7 @@ jobs:
       - name: Build Docker image
         run: |
           URL=$(echo ${{ vars.ARTIFACTORY_URL }} | sed 's|^https://||')
-          REPO_URL=${URL}'/example-project-docker-dev-virtual'
+          REPO_URL=${URL}'/example-project-docker-dev'
           docker build --build-arg REPO_URL=${REPO_URL} -f Dockerfile . \
           --tag ${REPO_URL}/example-project-app:${{ github.run_number }} \
           --output=type=image --platform linux/amd64 --metadata-file=build-metadata --push
@@ -47,9 +47,6 @@ jobs:
       - name: Upload readme file
         run: |
           jf rt upload ./README.md example-project-generic-dev/readme/${{ github.run_number }}/ --build-name ${{ vars.BUILD_NAME }} --build-number ${{ github.run_number }}
-          jf evd create --subject-repo-path example-project-generic-dev/readme/${{ github.run_number }}/README.md \
-            --key "${{ secrets.PRIVATE_KEY }}" \
-            --predicate ./sign.json --predicate-type https://jfrog.com/evidence/signature/v1
 
       - name: Publish build info
         run: jfrog rt build-publish ${{ vars.BUILD_NAME }} ${{ github.run_number }}
