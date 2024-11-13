@@ -1,4 +1,4 @@
-name: Build with evidence
+name: Build greenpizza
 
 on:
   [push, workflow_dispatch]
@@ -8,16 +8,27 @@ permissions:
   contents: read
 
 jobs:
-  Docker-build-with-evidence:
+  Docker-build:
     runs-on: ubuntu-latest
     steps:
+
       - name: Install jfrog cli
         uses: jfrog/setup-jfrog-cli@v4
+        with:
+          oidc-provider-name: evidence-demo
+          version: 2.70.0
         env:
           JF_URL: ${{ vars.ARTIFACTORY_URL }}
-          JF_ACCESS_TOKEN: ${{ secrets.ARTIFACTORY_ACCESS_TOKEN }}
 
       - uses: actions/checkout@v4
+
+      - name: Use shared variable
+        run: |
+          JFROG_CLI_BUILD_NAME=${{ vars.BUILD_NAME }}
+          JFROG_CLI_BUILD_NUMBER=${{ github.run_number }}
+
+      - name: Collect commits into buildinfo
+        run: jfrog rt build-add-git ${{ vars.BUILD_NAME }} ${{ github.run_number }}
 
       - name: Log in to Artifactory Docker Registry
         uses: docker/login-action@v3
@@ -38,15 +49,19 @@ jobs:
       - name: Build Docker image
         run: |
           URL=$(echo ${{ vars.ARTIFACTORY_URL }} | sed 's|^https://||')
-          REPO_URL=${URL}'/example-project-docker-dev-virtual'
-          docker build --build-arg REPO_URL=${REPO_URL} -f Dockerfile . \
-          --tag ${REPO_URL}/example-project-app:${{ github.run_number }} \
+          REPO_URL=${URL}'/${{ vars.PROJECT }}-docker-dev-virtual'
+          docker build --build-arg REPO_URL=${REPO_URL} -f go-server/Dockerfile . \
+          --tag ${REPO_URL}/${{ vars.PROJECT }}-app:${{ github.run_number }} \
           --output=type=image --platform linux/amd64 --metadata-file=build-metadata --push
-          jfrog rt build-docker-create example-project-docker-dev --image-file build-metadata --build-name ${{ vars.BUILD_NAME }} --build-number ${{ github.run_number }}
+          jfrog rt build-docker-create ${{ vars.PROJECT }}-docker-dev --image-file build-metadata --build-name ${{ vars.BUILD_NAME }} --build-number ${{ github.run_number }}
+
 
       - name: Upload readme file
         run: |
-          jf rt upload ./README.md example-project-generic-dev/readme/${{ github.run_number }}/ --build-name ${{ vars.BUILD_NAME }} --build-number ${{ github.run_number }}
+          jf rt upload ./README.md ${{ vars.PROJECT }}-generic-dev/readme/${{ github.run_number }}/ --build-name ${{ vars.BUILD_NAME }} --build-number ${{ github.run_number }}
 
       - name: Publish build info
         run: jfrog rt build-publish ${{ vars.BUILD_NAME }} ${{ github.run_number }}
+
+
+
