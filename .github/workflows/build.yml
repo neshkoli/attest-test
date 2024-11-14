@@ -34,23 +34,23 @@ jobs:
           username: ${{ secrets.JF_USER }}
           password: ${{ secrets.ARTIFACTORY_ACCESS_TOKEN }}
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v3
+      # - name: Set up QEMU
+      #   uses: docker/setup-qemu-action@v3
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-        with:
-          platforms: linux/amd64,linux/arm64
-          install: true
+      # - name: Set up Docker Buildx
+      #   uses: docker/setup-buildx-action@v3
+      #   with:
+      #     platforms: linux/amd64,linux/arm64
+      #     install: true
 
-      - name: Build Docker image
-        run: |
-          URL=$(echo ${{ vars.ARTIFACTORY_URL }} | sed 's|^https://||')
-          REPO_URL=${URL}'/${{ vars.PROJECT }}-docker-dev-virtual'
-          docker build --build-arg REPO_URL=${REPO_URL} -f go-server/Dockerfile . \
-          --tag ${REPO_URL}/${{ vars.PROJECT }}-app:${{ github.run_number }} \
-          --output=type=image --platform linux/amd64 --metadata-file=build-metadata --push
-          jfrog rt build-docker-create ${{ vars.PROJECT }}-docker-dev --image-file build-metadata --build-name ${{ vars.BUILD_NAME }} --build-number ${{ github.run_number }}
+      # - name: Build Docker image
+      #   run: |
+      #     URL=$(echo ${{ vars.ARTIFACTORY_URL }} | sed 's|^https://||')
+      #     REPO_URL=${URL}'/${{ vars.PROJECT }}-docker-dev-virtual'
+      #     docker build --build-arg REPO_URL=${REPO_URL} -f go-server/Dockerfile . \
+      #     --tag ${REPO_URL}/${{ vars.PROJECT }}-app:${{ github.run_number }} \
+      #     --output=type=image --platform linux/amd64 --metadata-file=build-metadata --push
+      #     jfrog rt build-docker-create ${{ vars.PROJECT }}-docker-dev --image-file build-metadata --build-name ${{ vars.BUILD_NAME }} --build-number ${{ github.run_number }}
 
 
       - name: Upload readme file
