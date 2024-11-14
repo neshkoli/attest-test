@@ -67,6 +67,7 @@ jobs:
 
       - uses: actions/attest-build-provenance@v1
         with:
-          subject-path: ${{ vars.PROJECT }}-generic-dev/readme/attest/README.md
+          # subject-path: ${{ vars.PROJECT }}-generic-dev/readme/attest/README.md
+          subject-digest: sha256:$(sha256sum ./README.md | awk '{print $1}')
 
 
