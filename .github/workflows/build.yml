@@ -60,13 +60,13 @@ jobs:
 
       - name: Upload readme file
         run: |
-          jf rt upload ./README.md ${{ vars.PROJECT }}-generic-dev/readme/${{ github.run_number }}/ --build-name ${{ vars.BUILD_NAME }} --build-number ${{ github.run_number }}
+          jf rt upload ./README.md ${{ vars.PROJECT }}-generic-dev/readme/attest/ --build-name ${{ vars.BUILD_NAME }} --build-number ${{ github.run_number }}
 
       - name: Publish build info
         run: jfrog rt build-publish ${{ vars.BUILD_NAME }} ${{ github.run_number }}
 
       - uses: actions/attest-build-provenance@v1
         with:
-          subject-path: ${{ vars.PROJECT }}-generic-dev/readme/${{ github.run_number }}/README.md
+          subject-path: ${{ vars.PROJECT }}-generic-dev/readme/attest/README.md
 
 
