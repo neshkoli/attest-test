@@ -4,6 +4,7 @@ inputs:
   github-token:
     description: 'GitHub token for accessing repository information'
     required: true
+    default: ${{ secrets.GITHUB_TOKEN }}
   output-path:
     description: 'Path where the provenance file will be written'
     required: true

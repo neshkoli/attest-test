@@ -40,14 +40,14 @@ jobs:
           subject-digest: sha256:${{ hashFiles('README.md') }}
           subject-name: README.md
 
-      # - name: Generate SLSA Provenance
-      #   uses: ./
-      #   with:
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     output-path: 'provenance.json'
+      - name: Generate SLSA Provenance
+        uses: ./.github/actions/slsa-provenance
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          output-path: 'provenance.json'
 
-      # - name: print provenance
-      #   run: cat provenance.json
+      - name: print provenance
+        run: cat provenance.json
 
       - name: Collect Provenance Data
         env:
@@ -70,6 +70,6 @@ jobs:
 
           echo "provenance.txt is:"
           cat provenance.txt
- 
+
 
 
