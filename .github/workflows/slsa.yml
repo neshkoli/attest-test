@@ -1,0 +1,84 @@
+name: Build-and-Attest
+
+on:
+  [push, workflow_dispatch]
+
+permissions:
+  id-token: write
+  attestations: write
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Generate SLSA Provenance
+        env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+            ARTIFACT_NAME="your-artifact-name"
+            ARTIFACT_SHA256=$(sha256sum $ARTIFACT_NAME | cut -d ' ' -f 1)
+            TIMESTAMP=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+            
+            cat << EOF > slsa_provenance.json
+            {
+            "_type": "https://in-toto.io/Statement/v0.1",
+            "subject": [
+                {
+                "name": "$ARTIFACT_NAME",
+                "digest": {
+                    "sha256": "$ARTIFACT_SHA256"
+                }
+                }
+            ],
+            "predicateType": "https://slsa.dev/provenance/v1",
+            "predicate": {
+                "buildDefinition": {
+                "buildType": "https://github.com/actions/workflow",
+                "externalParameters": {
+                    "repository": "${{ github.server_url }}/${{ github.repository }}",
+                    "workflow": "${{ github.workflow }}",
+                    "ref": "${{ github.ref }}"
+                },
+                "internalParameters": {
+                    "github": {
+                    "event_name": "${{ github.event_name }}",
+                    "sha": "${{ github.sha }}",
+                    "repository": "${{ github.repository }}",
+                    "actor": "${{ github.actor }}",
+                    "run_id": "${{ github.run_id }}",
+                    "run_number": "${{ github.run_number }}"
+                    }
+                },
+                "resolvedDependencies": [
+                    {
+                    "uri": "git+${{ github.server_url }}/${{ github.repository }}@${{ github.sha }}",
+                    "digest": {
+                        "sha1": "${{ github.sha }}"
+                    }
+                    }
+                ]
+                },
+                "runDetails": {
+                "builder": {
+                    "id": "https://github.com/actions/runner"
+                },
+                "metadata": {
+                    "invocationId": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}",
+                    "startedOn": "$TIMESTAMP",
+                    "finishedOn": "$TIMESTAMP"
+                },
+                "byproducts": [
+                    {
+                    "uri": "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}/logs",
+                    "content": null
+                    }
+                ]
+                }
+            }
+            }
+            EOF
+
+            echo "SLSA Provenance generated in slsa_provenance.json"
+            cat slsa_provenance.json
