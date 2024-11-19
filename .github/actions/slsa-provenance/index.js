@@ -1,10 +1,10 @@
-const core = require('@actions/core');
-const github = require('@actions/github');
 const { execSync } = require('child_process');
 
 // Install dependencies
 execSync('npm install @actions/core @actions/github', { stdio: 'inherit' });
 
+const core = require('@actions/core');
+const github = require('@actions/github');
 const fs = require('fs');
 
 async function run() {
