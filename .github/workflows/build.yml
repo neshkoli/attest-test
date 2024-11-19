@@ -40,10 +40,10 @@ jobs:
           subject-digest: sha256:${{ hashFiles('README.md') }}
           subject-name: README.md
 
-      - name: Install dependencies for slsa-provenance
-        run: |
-          cd ./.github/actions/slsa-provenance
-          npm install
+      # - name: Install dependencies for slsa-provenance
+      #   run: |
+      #     cd ./.github/actions/slsa-provenance
+      #     npm install
 
       - name: Generate SLSA Provenance
         uses: ./.github/actions/slsa-provenance

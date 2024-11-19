@@ -1,5 +1,10 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const { execSync } = require('child_process');
+
+// Install dependencies
+execSync('npm install @actions/core @actions/github', { stdio: 'inherit' });
+
 const fs = require('fs');
 
 async function run() {
@@ -45,16 +50,7 @@ async function run() {
         });
 
         // Generate provenance document
-        const provenance = {
-            _type: "https://in-toto.io/Statement/v0.1",
-            subject: [{
-                name: context.repo.repo,
-                digest: {
-                    sha1: context.sha
-                }
-            }],
-            predicateType: "https://slsa.dev/provenance/v1",
-            predicate: {
+        const provenance =  {
                 buildDefinition: {
                     buildType: buildInfo.buildType,
                     externalParameters: {},
@@ -70,7 +66,6 @@ async function run() {
                     },
                     byproducts: []
                 }
-            }
         };
 
         // Write provenance to file
