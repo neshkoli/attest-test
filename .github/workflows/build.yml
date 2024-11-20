@@ -43,21 +43,9 @@ jobs:
       - name: Build Provenance
         uses: neshkoli/build-provenance@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           output-path: 'provenance.json'
-          # target-path: ${{ vars.PROJECT }}-generic-dev/readme/attest/
-          
-      # - name: Install dependencies for slsa-provenance
-      #   run: |
-      #     cd ./.github/actions/slsa-provenance
-      #     npm install
-
-      # - name: Generate SLSA Provenance
-      #   uses: ./.github/actions/slsa-provenance
-      #   with:
-      #     github-token: ${{ secrets.GITHUB_TOKEN }}
-      #     output-path: 'provenance.json'
-
+          # github-token: ${{ secrets.GITHUB_TOKEN }}
+            
       - name: print provenance
         run: |
           echo "provenance.json is:"
