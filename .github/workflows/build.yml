@@ -59,7 +59,9 @@ jobs:
       #     output-path: 'provenance.json'
 
       - name: print provenance
-        run: cat provenance.json
+        run: |
+          echo "provenance.json is:"
+          cat provenance.json
 
       # - name: Collect Provenance Data
       #   env:
