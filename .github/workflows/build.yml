@@ -1,4 +1,4 @@
-name: Build-and-Attest
+name: Build-and-Create-Evidence
 
 on:
   [push, workflow_dispatch]
@@ -40,7 +40,8 @@ jobs:
           subject-digest: sha256:${{ hashFiles('README.md') }}
           subject-name: README.md
 
-      - uses: neshkoli/build-provenance@v1
+      - uses: neshkoli/build-provenance@558ea85
+ 
 
       - name: print provenance
         run: |

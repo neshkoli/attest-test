@@ -1,4 +1,4 @@
-name: Build-and-Attest
+name: slsa-provenance
 
 on:
   workflow_dispatch
