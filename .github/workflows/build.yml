@@ -40,41 +40,48 @@ jobs:
           subject-digest: sha256:${{ hashFiles('README.md') }}
           subject-name: README.md
 
+      - name: Build Provenance
+        uses: neshkoli/build-provenance@v1
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          output-path: 'provenance.json'
+          target-path: ${{ vars.PROJECT }}-generic-dev/readme/attest/
+          
       # - name: Install dependencies for slsa-provenance
       #   run: |
       #     cd ./.github/actions/slsa-provenance
       #     npm install
 
-      - name: Generate SLSA Provenance
-        uses: ./.github/actions/slsa-provenance
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          output-path: 'provenance.json'
+      # - name: Generate SLSA Provenance
+      #   uses: ./.github/actions/slsa-provenance
+      #   with:
+      #     github-token: ${{ secrets.GITHUB_TOKEN }}
+      #     output-path: 'provenance.json'
 
-      - name: print provenance
-        run: cat provenance.json
+      # - name: print provenance
+      #   run: cat provenance.json
 
-      - name: Collect Provenance Data
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # Collect basic information
-          echo "Repository: ${{ github.server_url }}/${{ github.repository }}" >> provenance.txt
-          echo "Commit: ${{ github.sha }}" >> provenance.txt
-          echo "Ref: ${{ github.ref }}" >> provenance.txt
-          echo "Runner OS: ${{ runner.os }}" >> provenance.txt
-          echo "Runner Arch: ${{ runner.arch }}" >> provenance.txt
-          echo "Workflow: ${{ github.workflow }}" >> provenance.txt
-          echo "Run ID: ${{ github.run_id }}" >> provenance.txt
-          echo "Run Number: ${{ github.run_number }}" >> provenance.txt
+      # - name: Collect Provenance Data
+      #   env:
+      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      #   run: |
+      #     # Collect basic information
+      #     echo "Repository: ${{ github.server_url }}/${{ github.repository }}" >> provenance.txt
+      #     echo "Commit: ${{ github.sha }}" >> provenance.txt
+      #     echo "Ref: ${{ github.ref }}" >> provenance.txt
+      #     echo "Runner OS: ${{ runner.os }}" >> provenance.txt
+      #     echo "Runner Arch: ${{ runner.arch }}" >> provenance.txt
+      #     echo "Workflow: ${{ github.workflow }}" >> provenance.txt
+      #     echo "Run ID: ${{ github.run_id }}" >> provenance.txt
+      #     echo "Run Number: ${{ github.run_number }}" >> provenance.txt
 
-          # Fetch job and step information using GitHub API
-          JOB_INFO=$(curl -H "Authorization: token $GITHUB_TOKEN" \
-            "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs")
-          echo "$JOB_INFO" | jq '.jobs[] | {name, status, steps: [.steps[] | {name, status, conclusion}]}' >> provenance.txt
+      #     # Fetch job and step information using GitHub API
+      #     JOB_INFO=$(curl -H "Authorization: token $GITHUB_TOKEN" \
+      #       "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs")
+      #     echo "$JOB_INFO" | jq '.jobs[] | {name, status, steps: [.steps[] | {name, status, conclusion}]}' >> provenance.txt
 
-          echo "provenance.txt is:"
-          cat provenance.txt
+      #     echo "provenance.txt is:"
+      #     cat provenance.txt
 
 
 
