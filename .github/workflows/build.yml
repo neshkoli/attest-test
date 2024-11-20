@@ -41,11 +41,11 @@ jobs:
           subject-name: README.md
 
       - name: Build Provenance
-        uses: neshkoli/build-provenance@v1
+        uses: neshkoli/build-provenance@v1.2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           output-path: 'provenance.json'
-          target-path: ${{ vars.PROJECT }}-generic-dev/readme/attest/
+          # target-path: ${{ vars.PROJECT }}-generic-dev/readme/attest/
           
       # - name: Install dependencies for slsa-provenance
       #   run: |

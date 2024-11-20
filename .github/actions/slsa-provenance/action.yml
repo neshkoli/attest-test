@@ -7,6 +7,9 @@ inputs:
   output-path:
     description: 'Path where the provenance file will be written'
     required: true
+  target-path:
+    description: 'Target path for uploading theprovenance file'
+    required: true
 
 runs:
   using: 'node20'
