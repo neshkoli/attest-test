@@ -41,7 +41,7 @@ jobs:
           subject-name: README.md
 
       - name: Build Provenance
-        uses: neshkoli/build-provenance@v1.2
+        uses: neshkoli/build-provenance@v1
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           output-path: 'provenance.json'
