@@ -42,7 +42,8 @@ jobs:
 
       - uses: neshkoli/build-provenance@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          artifact-path: README.md
+          # github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: print provenance
         run: |
