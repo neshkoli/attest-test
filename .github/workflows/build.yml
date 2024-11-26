@@ -34,13 +34,14 @@ jobs:
       - name: Publish build info
         run: jfrog rt build-publish 
 
-      # - uses: actions/attest-build-provenance@v1
-      #   with:
-      #     # subject-path: ${{ vars.PROJECT }}-generic-dev/readme/attest/README.md
-      #     subject-digest: sha256:${{ hashFiles('README.md') }}
-      #     subject-name: README.md
+      - uses: actions/attest-build-provenance@v1
+        with:
+          # subject-path: ${{ vars.PROJECT }}-generic-dev/readme/attest/README.md
+          subject-digest: sha256:${{ hashFiles('README.md') }}
+          subject-name: README.md
 
-      - uses: jfrog/evidence-build-provenance@v0.1
+#      - uses: jfrog/evidence-build-provenance@v0.1
+      - uses: neshkoli/build-provenance@v1
         with:
           artifact-path: README.md
 
