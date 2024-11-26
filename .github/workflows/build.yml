@@ -40,10 +40,9 @@ jobs:
       #     subject-digest: sha256:${{ hashFiles('README.md') }}
       #     subject-name: README.md
 
-      - uses: neshkoli/build-provenance@v1
+      - uses: jfrog/evidence-build-provenance@v0.1
         with:
           artifact-path: README.md
-          # github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: print provenance
         run: |
