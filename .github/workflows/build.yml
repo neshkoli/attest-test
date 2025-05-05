@@ -50,27 +50,6 @@ jobs:
           echo "provenance.json is:"
           cat provenance.json
 
-      # - name: Collect Provenance Data
-      #   env:
-      #     GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      #   run: |
-      #     # Collect basic information
-      #     echo "Repository: ${{ github.server_url }}/${{ github.repository }}" >> provenance.txt
-      #     echo "Commit: ${{ github.sha }}" >> provenance.txt
-      #     echo "Ref: ${{ github.ref }}" >> provenance.txt
-      #     echo "Runner OS: ${{ runner.os }}" >> provenance.txt
-      #     echo "Runner Arch: ${{ runner.arch }}" >> provenance.txt
-      #     echo "Workflow: ${{ github.workflow }}" >> provenance.txt
-      #     echo "Run ID: ${{ github.run_id }}" >> provenance.txt
-      #     echo "Run Number: ${{ github.run_number }}" >> provenance.txt
-
-      #     # Fetch job and step information using GitHub API
-      #     JOB_INFO=$(curl -H "Authorization: token $GITHUB_TOKEN" \
-      #       "https://api.github.com/repos/${{ github.repository }}/actions/runs/${{ github.run_id }}/jobs")
-      #     echo "$JOB_INFO" | jq '.jobs[] | {name, status, steps: [.steps[] | {name, status, conclusion}]}' >> provenance.txt
-
-      #     echo "provenance.txt is:"
-      #     cat provenance.txt
-
-
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
 
